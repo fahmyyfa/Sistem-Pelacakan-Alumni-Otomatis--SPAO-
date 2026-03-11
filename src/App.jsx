@@ -38,7 +38,6 @@ function App() {
 
   async function handleSimulate(item) {
     let mockCandidate;
-    // Logika Simulasi Disambiguasi [cite: 537, 574-576]
     if (item.full_name === "Fahmi Alfaqih") {
       mockCandidate = {
         name: item.full_name,
@@ -57,7 +56,6 @@ function App() {
 
     const { score, status } = calculateSPAOValue(item, mockCandidate);
 
-    // Simpan Jejak Bukti ke Database [cite: 533, 567, 602]
     await supabase.from("tracking_results").insert([
       {
         alumni_id: item.id,
@@ -94,7 +92,7 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-12 text-slate-900 font-sans">
       <div className="max-w-5xl mx-auto">
-        {/* Header Section */}
+        {}
         <header className="mb-12 flex flex-col items-center text-center">
           <div className="bg-blue-600 text-white px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4 shadow-lg shadow-blue-200">
             Internal System
@@ -119,7 +117,7 @@ function App() {
           </button>
         </header>
 
-        {/* Data Master Table [cite: 526] */}
+        {}
         <div className="bg-white rounded-[2rem] shadow-2xl shadow-blue-100 overflow-hidden border border-white mb-12">
           <table className="w-full text-left">
             <thead className="bg-slate-50 border-b border-slate-100">
@@ -177,7 +175,7 @@ function App() {
           </table>
         </div>
 
-        {/* Evidence Log Section [cite: 567, 602] */}
+        {}
         <div className="bg-slate-900 rounded-[2.5rem] p-10 text-white shadow-2xl relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full -mr-32 -mt-32 blur-3xl"></div>
           <div className="flex items-center justify-between mb-8 relative z-10">
@@ -261,7 +259,6 @@ function App() {
   );
 }
 
-// Sub-komponen untuk rincian indikator scoring [cite: 574-576]
 function Badge({ score, label }) {
   return (
     <div
