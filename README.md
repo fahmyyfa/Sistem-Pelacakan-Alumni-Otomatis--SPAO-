@@ -11,7 +11,9 @@
 
 Sistem menggunakan pembobotan atribut untuk menentukan tingkat kepercayaan (_Confidence Score_) terhadap data yang ditemukan. Rumus yang digunakan adalah:
 
-$$Score_{total} = \text{Atribut}_{Nama}(40\%) + \text{Atribut}_{Afiliasi}(40\%) + \text{Atribut}_{Timeline}(20\%)$$
+$$
+Score_{total} = Atribut_{Nama}(40\%) + Atribut_{Afiliasi}(40\%) + Atribut_{Timeline}(20\%)
+$$
 
 | Komponen             | Skor | Kriteria                                     |
 | :------------------- | :--- | :------------------------------------------- |
