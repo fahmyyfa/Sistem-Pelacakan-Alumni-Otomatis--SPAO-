@@ -15,17 +15,52 @@ function App() {
     setAlumni(data || []);
   }
 
-  async function handleSimulate(item) {
-    // Simulasi data temuan dari sumber publik [cite: 594-595]
-    const mockCandidate = {
-      name: item.full_name,
-      affiliation: "Universitas Muhammadiyah Malang",
-      year: item.graduation_year,
-    };
+  // Tambahkan fungsi ini di dalam App()
+  async function handleReset() {
+    const { error } = await supabase
+      .from("alumni_master")
+      .update({ status_pelacakan: "Belum Dilacak" })
+      .neq("status_pelacakan", "Belum Dilacak"); // Memperbarui baris yang statusnya bukan default
 
+    if (!error) {
+      fetchAlumni(); // Memperbarui tampilan secara real-time
+    } else {
+      console.error("Gagal melakukan reset:", error);
+    }
+  }
+
+  async function handleSimulate(item) {
+    let mockCandidate;
+
+    // Skenario 1: Data Sangat Akurat (Skor 100)
+    if (item.full_name === "Fahmi Alfaqih") {
+      mockCandidate = {
+        name: item.full_name,
+        affiliation: "Universitas Muhammadiyah Malang",
+        year: item.graduation_year,
+      };
+    }
+    // Skenario 2: Nama & Tahun Cocok, Afiliasi Beda (Skor 60) -> Relasi <<extend>> Verifikasi Manual
+    else if (item.full_name === "Andi Pratama") {
+      mockCandidate = {
+        name: item.full_name,
+        affiliation: "Perusahaan Startup XYZ",
+        year: item.graduation_year,
+      };
+    }
+    // Skenario 3: Data Tidak Relevan (Skor < 50)
+    else {
+      mockCandidate = {
+        name: "Orang Lain",
+        affiliation: "Instansi Lain",
+        year: 2010,
+      };
+    }
+
+    // Hitung Skor (Nama +40, Afiliasi +40, Timeline +20) [cite: 574-578]
     const { score, status } = calculateSPAOValue(item, mockCandidate);
 
-    // Simpan log bukti hasil pelacakan [cite: 602-603]
+    // Simpan Jejak Bukti [cite: 602-603]
     await supabase.from("tracking_results").insert([
       {
         alumni_id: item.id,
@@ -35,13 +70,12 @@ function App() {
       },
     ]);
 
-    // Perbarui status di tabel master [cite: 601-608]
+    // Update Status di Database [cite: 601, 608]
     await supabase
       .from("alumni_master")
       .update({ status_pelacakan: status })
       .eq("id", item.id);
-
-    fetchAlumni(); // Segarkan data di layar
+    fetchAlumni();
   }
 
   return (
@@ -53,6 +87,13 @@ function App() {
         <p className="text-slate-500 mb-8">
           Sistem Pelacakan Alumni Otomatis — Project Daily 3
         </p>
+
+        <button
+          onClick={handleReset}
+          className="mb-6 text-xs text-red-500 underline hover:text-red-700 transition"
+        >
+          Reset Semua Status untuk Demo
+        </button>
 
         <div className="bg-white shadow-xl rounded-2xl overflow-hidden border border-slate-200">
           <table className="w-full text-left">
